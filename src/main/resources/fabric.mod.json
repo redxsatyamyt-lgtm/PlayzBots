@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "heroui",
+  "version": "${version}",
+  "name": "HeroUI",
+  "description": "A lightweight command-macro control panel + HUD + recording tools for HeroBot / PVP Bot. Adds a GUI, customizable keybinds, and unlimited user-defined command macros.",
+  "authors": ["you"],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/heroui/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["com.heroui.client.HeroUIClient"]
+  },
+  "mixins": [
+    {
+      "config": "heroui.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": ">=1.21.10",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "herobot": "*",
+    "pvp_bot": "*"
+  }
+}
