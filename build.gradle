@@ -1,0 +1,57 @@
+plugins {
+    id 'fabric-loom' version '1.14-SNAPSHOT'
+    id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+repositories {
+    // Add repositories for other mod dependencies here if needed
+    maven { url = 'https://maven.nucleoid.xyz' } // common host for small utility mods
+}
+
+dependencies {
+    // Minecraft + mappings + loader
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+    // Fabric API
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    // NOTE: HeroBot and PVP Bot are NOT bundled with this mod.
+    // This mod only talks to them through vanilla commands at runtime,
+    // so the player must install herobot + pvp_bot jars separately in /mods.
+    // If you want compile-time access to their classes (optional, not required
+    // for the command-macro approach used here), you'd add them as
+    // modCompileOnly files('libs/herobot.jar') etc. Left out on purpose to
+    // avoid any licensing/redistribution issues.
+}
+
+processResources {
+    inputs.property 'version', project.version
+    filesMatching('fabric.mod.json') {
+        expand 'version': project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 21
+}
+
+java {
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+jar {
+    from('LICENSE') {
+        rename { "${it}_${project.base.archivesName.get()}" }
+    }
+}
