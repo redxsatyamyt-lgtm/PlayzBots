@@ -10,17 +10,19 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 public class HeroUIClient implements ClientModInitializer {
 
     public static final String MOD_ID = "heroui";
 
-    // Public so the GUI/HUD classes can read+save it too
     public static MacroConfig CONFIG;
 
-    // Toggle state for recording helpers
     public static boolean hudHidden = false;
+
+    private static final KeyBinding.Category CATEGORY =
+            KeyBinding.Category.create(Identifier.of(MOD_ID, "main"));
 
     private static KeyBinding openPanelKey;
     private static KeyBinding toggleHudKey;
@@ -30,27 +32,25 @@ public class HeroUIClient implements ClientModInitializer {
     public void onInitializeClient() {
         CONFIG = MacroConfig.loadOrCreateDefault();
 
-        // Default keybind: G opens the control panel. Fully rebindable
-        // in-game via Options -> Controls -> Key Binds -> HeroUI category.
         openPanelKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.heroui.open_panel",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_G,
-                "category.heroui"
+                CATEGORY
         ));
 
         toggleHudKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.heroui.toggle_hud",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_F9,
-                "category.heroui"
+                CATEGORY
         ));
 
         toggleNameTagsKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.heroui.toggle_nametags",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_F10,
-                "category.heroui"
+                CATEGORY
         ));
 
         HudRenderCallback.EVENT.register((drawContext, tickCounter) -> {
@@ -75,7 +75,6 @@ public class HeroUIClient implements ClientModInitializer {
         });
     }
 
-    /** Sends a command to the server exactly like typing it in chat, minus the leading slash. */
     public static void sendCommand(String command) {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null) return;
