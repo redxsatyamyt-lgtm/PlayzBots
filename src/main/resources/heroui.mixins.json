@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "com.heroui.client.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "NameTagMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
